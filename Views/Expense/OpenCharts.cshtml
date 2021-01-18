@@ -1,0 +1,185 @@
+﻿
+@{
+    ViewData["Title"] = "OpenCharts";
+}
+
+<br />
+
+<div class="form-group row col-md-offset-2">
+    <button id="btnMonthlyReport" class="btn btn-primary mx-2">Last 30 days expenses report</button>
+
+    <button id="btnYearlyReport" class="btn btn-secondary mx-2">Last 12 months report</button>
+
+    <button id="btnPieMonthly" class="btn btn-warning mx-2">Pie chart 30 days report</button>
+</div>
+
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
+@*<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>*@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnMonthlyReport").click(function () {
+            var titleMessage = "Expenses in last 30 days are : ";
+            $.ajax({
+                type: "GET",
+                url: "/Expense/GetMonthlyExpense",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (result) {
+                    var keys = Object.keys(result);
+                    var monthlydata = new Array();
+                    var totalspent = 0.0;
+                    for (var i = 0; i < keys.length; i++) {
+                        var arrL = new Array();
+                        arrL.push(keys[i]);
+                        arrL.push(result[keys[i]]);
+                        totalspent += result[keys[i]];
+                        monthlydata.push(arrL);
+                    }
+                    createChartsColumn(monthlydata, titleMessage, totalspent.toFixed(2));
+                }
+            })
+
+            $("#btnYearlyReport").click(function () {
+                var titleMessage = "Expenses in last 12 months are : ";
+                $.ajax({
+                    type: "GET",
+                    url: "/Expense/GetYearlyExpense",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (result) {
+                        var keys = Object.keys(result);
+                        var yearlyData = new Array();
+                        var totalspent = 0.0;
+                        for (var i = 0; i < keys.length; i++) {
+                            var arrL = new Array();
+                            arrL.push(keys[i]);
+                            arrL.push(result[keys[i]]);
+                            totalspent += result[keys[i]];
+                            yearlyData.push(arrL);
+                        }
+                        createChartsColumn(yearlyData, titleMessage, totalspent.toFixed(2));
+                    }
+                })
+
+                $(document).ready(function () {
+                    $("#btnPieMonthly").click(function () {
+                        var titleMessage = "Expenses in last 30 days are : ";
+                        $.ajax({
+                            type: "GET",
+                            url: "/Expense/GetMonthlyExpense",
+                            contentType: "application/json",
+                            dataType: "json",
+                            success: function (result) {
+                                var keys = Object.keys(result);
+                                var monthlydata = new Array();
+                                var totalspent = 0.0;
+                                for (var i = 0; i < keys.length; i++) {
+                                    var arrL = new Array();
+                                    arrL.push(keys[i]);
+                                    arrL.push(result[keys[i]]);
+                                    totalspent += result[keys[i]];
+                                    monthlydata.push(arrL);
+                                }
+                                createChartsPie(monthlydata, titleMessage, totalspent.toFixed(2));
+                            }
+                        })
+
+
+                        function createChartsColumn(sum, titleText, totalspent) {
+                            Highcharts.chart('container', {
+                                chart: {
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: titleText + ' ' + totalspent
+                                },
+                                xAxis: {
+                                    type: 'category',
+                                    labels: {
+                                        rotation: -45,
+                                        style: {
+                                            fontSize: '13px',
+                                            fontFamily: 'Verdana, sans-serif'
+                                        }
+                                    }
+                                },
+                                yAxis: {
+                                    min: 0,
+                                    title: {
+                                        text: 'Money spent'
+                                    }
+                                },
+                                legend: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: 'Total money spent: <b>{point.y:.2f} </b>'
+                                },
+                                series: [{
+                                    type: 'column',
+                                    data: sum,
+                                }]
+                            });
+                        }
+
+                        function createChartsPie(sum, titleText, totalspent) {
+                            Highcharts.chart('container', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                title: {
+                                    text: titleText + ' ' + totalspent
+                                },
+
+                                legend: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: 'Total money spent: <b>{point.y:.2f} </b>'
+                                },
+
+                                series: [{
+                                    type: 'column',
+                                    data: sum,
+                                }],
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                            style: {
+                                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Category',
+                                    colorByPoint: true,
+                                    data: [{
+                                        name: 'Utilities',
+                                        y: data.Male
+                                    }, {
+                                        name: 'Payrolls',
+                                        y: data.Female
+                                    }, {
+                                        name: 'Rent',
+                                        y: data.Rent
+                                    }, {
+                                        name: 'Bank Rates',
+                                        y: data.BankRates
+                                    }, {
+                                        name: 'Maintenance',
+                                        y: data.Female
+                                    }]
+                                });
+                        }
+
+</script>
