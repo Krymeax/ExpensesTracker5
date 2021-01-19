@@ -29,6 +29,7 @@ namespace ExpensesTracker5
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection"))) ;
             services.AddControllersWithViews();
+            services.AddControllers(options => options.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,17 +47,23 @@ namespace ExpensesTracker5
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Expense}/{action=Index}");
+            });
             app.UseRouting();
+
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllerRoute(
+            //        name: "default",
+            //        pattern: "{controller=Home}/{action=Index}/{id?}");
+            //});
         }
     }
 }
