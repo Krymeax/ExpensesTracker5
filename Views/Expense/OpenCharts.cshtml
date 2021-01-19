@@ -1,4 +1,61 @@
-﻿
+@*<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <div id="chartdiv" style="width: 600px; height: 350px"></div>
+    <button type="button" onclick="document.write(5 + 6)">Try it</button>
+
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+
+        //Call function after Google Chart is loaded, it is required, otherwise you may get error
+        google.charts.setOnLoadCallback(DrawonLoad);
+        $(function (){
+            DrawonLoad();
+        });
+
+        function DrawonLoad() {
+            $(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Expense/GetMonthlyExpense',
+                    success: function (chartsdata) {
+                        // Callback that creates and populates a data table,
+                        // instantiates the pie chart, passes in the data and
+                        // draws it.
+
+                        //get JSONList from Object
+                        var Data = chartsdata.JSONList;
+                        var data = new google.visualization.DataTable();
+
+                        data.addColumn('string', 'CategoryName');
+                        data.addColumn('number', 'PostCount');
+
+                        //Loop through each list data
+                        for (var i = 0; i < Data.length; i++) {
+                            data.addRow([Data[i].CategoryName, Data[i].PostCount]);
+                        }
+
+                        // Instantiate and draw our chart, passing in some options
+                        var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
+
+                        //Draw pie chart command with data and chart options
+                        chart.draw(data,
+                            {
+                                title: "pLs Work",
+                                position: "top",
+                                fontsize: "14px",
+                            });
+
+                    },
+                    error: function () {
+                        alert("Error loading data! Please try again.");
+                    }
+                });
+            })
+
+        }
+    </script>*@
+
 @{
     ViewData["Title"] = "OpenCharts";
 }
@@ -40,7 +97,6 @@
                     createChartsColumn(monthlydata, titleMessage, totalspent.toFixed(2));
                 }
             })
-
             $("#btnYearlyReport").click(function () {
                 var titleMessage = "Expenses in last 12 months are : ";
                 $.ajax({
@@ -62,7 +118,6 @@
                         createChartsColumn(yearlyData, titleMessage, totalspent.toFixed(2));
                     }
                 })
-
                 $(document).ready(function () {
                     $("#btnPieMonthly").click(function () {
                         var titleMessage = "Expenses in last 30 days are : ";
@@ -85,8 +140,6 @@
                                 createChartsPie(monthlydata, titleMessage, totalspent.toFixed(2));
                             }
                         })
-
-
                         function createChartsColumn(sum, titleText, totalspent) {
                             Highcharts.chart('container', {
                                 chart: {
@@ -135,14 +188,12 @@
                                 title: {
                                     text: titleText + ' ' + totalspent
                                 },
-
                                 legend: {
                                     enabled: false
                                 },
                                 tooltip: {
                                     pointFormat: 'Total money spent: <b>{point.y:.2f} </b>'
                                 },
-
                                 series: [{
                                     type: 'column',
                                     data: sum,
@@ -165,10 +216,10 @@
                                     colorByPoint: true,
                                     data: [{
                                         name: 'Utilities',
-                                        y: data.Male
+                                        y: data.Utilities
                                     }, {
                                         name: 'Payrolls',
-                                        y: data.Female
+                                        y: data.Payrolls
                                     }, {
                                         name: 'Rent',
                                         y: data.Rent
@@ -177,9 +228,9 @@
                                         y: data.BankRates
                                     }, {
                                         name: 'Maintenance',
-                                        y: data.Female
+                                        y: data.Maintenance
                                     }]
-                                });
+                                })
                         }
-
 </script>
+
