@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <form id="expenseForm" method="post">
                 <div>
-                    <input asp-for="ExpenseId" type="hidden"/>
+                    <input asp-for="ExpenseId" type="hidden" />
                     <div class="form-group">
                         <label asp-for="ExpenseName" class="control-label">Expense Name</label>
                         <input asp-for="ExpenseName" class="form-control" />
@@ -31,6 +31,18 @@
                         <label asp-for="ExpenseDate" class="control-label">Expense Date</label>
                         <div class="input-group date">
                             <input asp-for="ExpenseDate" type="date" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Expired" class="control-label">Expire DEBUG</label>
+                        <div class="input-group date">
+                            <input asp-for="Expired" type="checkbox" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="IsCompleted" class="control-label"> IsCompleted DEBUG</label>
+                        <div class="input-group date">
+                            <input asp-for="IsCompleted" type="checkbox" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group row">

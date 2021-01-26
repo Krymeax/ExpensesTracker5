@@ -45,29 +45,60 @@
 {
     <table class="table">
         <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.ExpenseId)</th>
-                <th>@Html.DisplayNameFor(model => model.ExpenseName)</th>
-                <th>@Html.DisplayNameFor(model => model.Amount)</th>
-                <th>@Html.DisplayNameFor(model => model.ExpenseDate)</th>
-                <th>@Html.DisplayNameFor(model => model.Category)</th>
-                <th>Actions</th>
+            <tr >
+                <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseId)</th>
+                <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseName)</th>
+                <th class="text-center">@Html.DisplayNameFor(model => model.Amount)</th>
+                <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseDate)</th>
+                <th class="text-center">@Html.DisplayNameFor(model => model.Category)</th>
+                <th class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
-                    <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                @if (item.Expired == true)
+                {
+            <tr style="background-color:crimson; color:white"  class="text-center">
+                <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
+                <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                @if (item.IsCompleted == false)
+                 {
+                    var shortDate = item.DueDate.ToShortDateString();
+                    <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
+                 }
+                else
+                 {
                     <td>@Html.DisplayFor(modelItem => item.ExpenseDate)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                    <td>
-                        <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
-                        <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
-                    </td>
-                </tr>
+                 }
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>
+                    <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
+                    <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
+                </td>
+            </tr>
+                }
+                else { 
+        <tr class="text-center">
+            <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
+            <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
+            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+            @if (item.IsCompleted == false)
+            {
+                var shortDate = item.DueDate.ToShortDateString();
+                <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
+            }
+            else
+            {
+                <td>@Html.DisplayFor(modelItem => item.ExpenseDate)</td>
+            }
+            <td>@Html.DisplayFor(modelItem => item.Category)</td>
+            <td>
+                <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
+                <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
+            </td>
+        </tr>}
             }
         </tbody>
     </table>

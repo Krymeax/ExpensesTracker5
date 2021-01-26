@@ -186,7 +186,9 @@ namespace ExpensesTracker5.Controllers
 
         //    return Json(dictWeeklySum, JsonRequestBehavior.AllowGet);
         //}
-        [Microsoft.AspNetCore.Mvc.HttpPost]
+        //[Microsoft.AspNetCore.Mvc.HttpPost]
+        [System.Web.Mvc.HttpPost]
+        [System.Web.Mvc.ValidateAntiForgeryToken]
         public Microsoft.AspNetCore.Mvc.JsonResult GetMonthlyExpense() // 30 days
         {
             List<ExpenseModel> list = new List<ExpenseModel>();
@@ -236,12 +238,28 @@ namespace ExpensesTracker5.Controllers
         public IEnumerable<ExpenseModel> GetSearchResult(string searchString)
         {
             List<ExpenseModel> exp = new List<ExpenseModel>();
-            IEnumerable<ExpenseModel> result = exp;
+            IEnumerable<ExpenseModel> result = null;
 
             exp = _db.Expenses.ToList();
             result = exp.Where(x => x.ExpenseName.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) != -1);
-            if (result == null)
-                result = exp.Where(x => x.Category.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) != -1);
+            if (result.Any() == false)
+            result = exp.Where(x => x.Category.IndexOf(searchString, StringComparison.OrdinalIgnoreCase) != -1);
+            if (result.Any() == false)
+            {
+                IEnumerable<ExpenseModel> expenseDates = null;
+                expenseDates = exp.Where(x => x.ExpenseDate.ToShortDateString().IndexOf(searchString, StringComparison.OrdinalIgnoreCase) != -1);
+                IEnumerable<ExpenseModel> dueDates = null;
+                dueDates = exp.Where(x => x.DueDate.ToShortDateString().IndexOf(searchString, StringComparison.OrdinalIgnoreCase) != -1);
+                result = expenseDates.Concat(dueDates);
+            }
+            if (result.Any() == false && (searchString == "Expired" || searchString == "expired" || searchString == "EXPIRED"))
+            {
+                result = exp.Where(x => x.Expired == true );
+            }
+            if (result.Any() == false && (searchString == "due" || searchString == "Due" || searchString == "DUE"))
+            {
+                result = exp.Where(x => x.IsCompleted == false);
+            }
             return result;
         }
 

@@ -15,7 +15,7 @@
         $(function () {
             $.ajax({
                 type: 'GET',
-                url: '/Expense/GetMonthlyExpense',
+                url: '@Url.Action("GetMonthlyExpense", "Expense")',
                 success: function (chartsdata) {
                     var Data = chartsdata.JSONList;
                     var data = new google.visualization.DataTable();
