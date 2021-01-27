@@ -37,6 +37,12 @@
                             </div>
                         </div>
 
+                        <div class="form-group" id="dueDiv" style="display:none">
+                            <label asp-for="DueDate" class="control-label">Due Date</label>
+                            <div class="input-group date">
+                                <input asp-for="DueDate" type="date" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label asp-for="Expired" class="control-label">Expire DEBUG</label>
@@ -58,9 +64,11 @@
                                     $('input').on('click', function () {
                                         if (ckbox.is(':checked')) {
                                             document.getElementById("expenseDiv").style.display = "block";
+                                            document.getElementById("dueDiv").style.display = "none";
                                         }
                                         else {
                                             document.getElementById("expenseDiv").style.display = "none";
+                                            document.getElementById("dueDiv").style.display = "block";
                                         }
                                     });
                                 });
@@ -71,9 +79,13 @@
                                 var checkedValue = $('#completedExpense').is(":checked");
                                 if (checkedValue == true) {
                                     document.getElementById("expenseDiv").style.display = "block";
+                                    document.getElementById("dueDiv").style.display = "none";
+
                                 }
                                 else {
                                     document.getElementById("expenseDiv").style.display = "none";
+                                    document.getElementById("dueDiv").style.display = "block";
+
                                 }
                             </script>
                         }
