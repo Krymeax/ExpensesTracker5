@@ -63,19 +63,35 @@
                     totalExpired++;
                 @if (item.Expired == true)
                 {
-                    <tr style="background-color:crimson; color:white" class="text-center">
+                    <tr style="background-color:lightcoral; color:black" class="text-center">
                         <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
                         <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
                         <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-                        @if (item.IsCompleted == false)
-                        {
+                        @{
                             var shortDate = item.DueDate.ToShortDateString();
                             <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
                         }
-                        else
-                        {
-                            <td>@Html.DisplayFor(modelItem => item.ExpenseDate)</td>
-                        }
+                       
+                        <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                        <td>
+                            <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
+                            <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
+                        </td>
+                    </tr>
+                            }
+
+                            else if (item.Expired == false && item.IsCompleted == false)
+                            {
+                    <tr style="background-color:wheat; color:black" class="text-center">
+                        <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+
+                            @{
+                                var shortDate = item.DueDate.ToShortDateString();
+                            <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
+                            }
+
                         <td>@Html.DisplayFor(modelItem => item.Category)</td>
                         <td>
                             <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
@@ -83,9 +99,10 @@
                         </td>
                     </tr>
                 }
+
                 else
                 {
-                    <tr class="text-center">
+                    <tr style="background-color:white; color:black" class="text-center">
                         <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
                         <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
                         <td>@Html.DisplayFor(modelItem => item.Amount)</td>
@@ -129,7 +146,7 @@
                 "hideMethod": "fadeOut"
             }
 
-            toastr.warning("Please be informed that you have an expired expense. In order to see it search for 'expired' or look for the red colored row.", "Expired Expense!");
+            toastr.error("Please be informed that you have an expired expense. In order to see it search for 'expired' or look for the red colored row.", "Expired Expense!");
             //toastr.options{
             //    onclick: function() {
             //        $.ajax({
@@ -162,7 +179,7 @@
                 "showMethod": "fadeIn",
                 "hideMethod": "fadeOut"
             }
-            toastr.warning("Please be informed that you have expired expenses. In order to see them search for 'expired' or or look for the red colored rows.", "Expired Expenses!");
+            toastr.error("Please be informed that you have expired expenses. In order to see them search for 'expired' or look for the red colored rows.", "Expired Expenses!");
         </script>
     }
 

@@ -18,6 +18,24 @@
                         <label asp-for="IsCompleted" class="form-check-label">Did you complete the transaction?</label>
                         <input style="margin-left:20px" asp-for="IsCompleted" type="checkbox" class="form-check-input" checked id="completedExpense" />
                     </div>
+                    @{
+                        <script>
+                            $(document).ready(function () {
+                                var ckbox = $('#completedExpense');
+
+                                $('input').on('click', function () {
+                                    if (ckbox.is(':checked')) {
+                                        document.getElementById("expenseDiv").style.display = "block";
+                                        document.getElementById("dueDiv").style.display = "none";
+                                    }
+                                    else {
+                                        document.getElementById("expenseDiv").style.display = "none";
+                                        document.getElementById("dueDiv").style.display = "block";
+                                    }
+                                });
+                            });
+                        </script>
+                    }
                     <div class="form-group">
                         <label asp-for="ExpenseName" class="control-label">Expense Name</label>
                         <input asp-for="ExpenseName" class="form-control" />
@@ -39,12 +57,20 @@
                         <input asp-for="Amount" class="form-control" />
                         <span asp-validation-for="Amount" class="text-danger"></span>
                     </div>
-                    <div class="form-group" id="calender-container">
+                    <div class="form-group" id="expenseDiv">
                         <label asp-for="ExpenseDate" class="control-label">Expense Date</label>
                         <div class="input-group date">
                             <input asp-for="ExpenseDate" type="date" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
                     </div>
+
+                    <div class="form-group" id="dueDiv" style="display:none">
+                        <label asp-for="DueDate" class="control-label">Due Date</label>
+                        <div class="input-group date">
+                            <input asp-for="DueDate" type="date" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <div class="col">
                             @*<button type="button" id="btnSubmit" class="btn btn-block btn-info">Save</button>*@
