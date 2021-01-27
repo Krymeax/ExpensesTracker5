@@ -4,30 +4,33 @@
 
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<div id="chartdiv" style="width: 600px; height: 350px"></div>
+<div id="chartdiv" style="width: 1000px; height: 500px; margin:0 auto"></div>
 <script>
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(DrawonLoad);
-    $(function () {
-        DrawonLoad();
-    });
+
     function DrawonLoad() {
         $(function () {
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: '/Expense/GetMonthlyExpense',
                 success: function (chartsdata) {
-                    var Data = chartsdata.JSONList;
+                    var Data = chartsdata.jsonList;
+
+                    let dataArr = [];
+
+                    console.log(Data);
+
                     var data = new google.visualization.DataTable();
-                    data.addColumn('string', 'CategoryName');
-                    data.addColumn('number', 'PostCount');
+                    data.addColumn('string', 'Expense Name');
+                    data.addColumn('number', 'Amount');
                     for (var i = 0; i < Data.length; i++) {
-                        data.addRow([Data[i].CategoryName, Data[i].PostCount]);
+                        data.addRow([Data[i].expenseName, Data[i].amount]);
                     }
                     var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
                     chart.draw(data,
                         {
-                            title: "pLs Work",
+                            title: "Monthly Expense Chart",
                             position: "top",
                             fontsize: "14px",
                         });
