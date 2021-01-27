@@ -41,94 +41,107 @@
 
 <br />
 <br />
+<form id="expenseForm" method="post">
 
-@if (Model.Count() > 0)
-{
-    Int32 totalExpired = 0;
-    <table class="table">
-        <thead>
-            <tr>
-                <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseId)</th>
-                <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseName)</th>
-                <th class="text-center">@Html.DisplayNameFor(model => model.Amount)</th>
-                <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseDate)</th>
-                <th class="text-center">@Html.DisplayNameFor(model => model.Category)</th>
-                <th class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                if (item.Expired == true)
-                    totalExpired++;
-                @if (item.Expired == true)
+    @if (Model.Count() > 0)
+    {
+        Int32 totalExpired = 0;
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseId)</th>
+                    <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseName)</th>
+                    <th class="text-center">@Html.DisplayNameFor(model => model.Amount)</th>
+                    <th class="text-center">@Html.DisplayNameFor(model => model.ExpenseDate)</th>
+                    <th class="text-center">@Html.DisplayNameFor(model => model.Category)</th>
+                    <th class="text-center">Actions</th>
+                    <th class="text-center">Completed</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
                 {
-                    <tr style="background-color:lightcoral; color:black" class="text-center">
-                        <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-                        @{
-                            var shortDate = item.DueDate.ToShortDateString();
-                            <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
-                        }
-                       
-                        <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                        <td>
-                            <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
-                            <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
-                        </td>
-                    </tr>
+                    if (item.Expired == true)
+                        totalExpired++;
+                    @if (item.Expired == true)
+                    {
+                        <tr style="background-color:lightcoral; color:black" class="text-center">
+                            <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                            @{
+                                var shortDate = item.DueDate.ToShortDateString();
+                                <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
                             }
 
-                            else if (item.Expired == false && item.IsCompleted == false)
-                            {
-                    <tr style="background-color:wheat; color:black" class="text-center">
-                        <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                            <td>
+                                <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
+                                <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
+                            </td>
+                            <td>
+                                <input asp-for="@item.IsCompleted" type="checkbox" class="form-check-input text-center" />
+
+                            </td>
+                        </tr>
+                    }
+
+                    else if (item.Expired == false && item.IsCompleted == false)
+                    {
+                        <tr style="background-color:wheat; color:black" class="text-center">
+                            <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
 
                             @{
                                 var shortDate = item.DueDate.ToShortDateString();
-                            <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
+                                <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
                             }
 
-                        <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                        <td>
-                            <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
-                            <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
-                        </td>
-                    </tr>
-                }
+                            <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                            <td>
+                                <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
+                                <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
+                            </td>
+                            <td>
+                                <input asp-for=@item.IsCompleted type="checkbox" onchange="document.getElementById('expenseForm').submit()" class="form-check-input text-center" />
+                            </td>
+                        </tr>
+                    }
 
-                else
-                {
-                    <tr style="background-color:white; color:black" class="text-center">
-                        <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Amount)</td>
-                        @if (item.IsCompleted == false)
-                        {
-                            var shortDate = item.DueDate.ToShortDateString();
-                            <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
-                        }
-                        else
-                        {
-                            <td>@Html.DisplayFor(modelItem => item.ExpenseDate)</td>
-                        }
-                        <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                        <td>
-                            <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
-                            <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
-                        </td>
-                    </tr>
+                    else
+                    {
+                        <tr style="background-color:white; color:black" class="text-center">
+                            <td>@Html.DisplayFor(modelItem => item.ExpenseId)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ExpenseName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                            @if (item.IsCompleted == false)
+                            {
+                                var shortDate = item.DueDate.ToShortDateString();
+                                <td><text>Due date until:</text> @Html.DisplayFor(modelItem => shortDate)</td>
+                            }
+                            else
+                            {
+                                <td>@Html.DisplayFor(modelItem => item.ExpenseDate)</td>
+                            }
+                            <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                            <td>
+                                <a class="btn btn-primary mx-2" asp-route-Id="@item.ExpenseId" asp-action="Edit">Edit</a>
+                                <a class="btn btn-danger mx-2" asp-route-Id="@item.ExpenseId" asp-action="Delete">Delete</a>
+                            </td>
+                            <td>
+                                <input asp-for="@item.IsCompleted" type="checkbox" class="form-check-input text-center" disabled readonly />
+                            </td>
+                        </tr>
+                    }
                 }
-            }
-        </tbody>
-    </table>
-    if (totalExpired == 1)
-    {
+            </tbody>
+        </table>
+        if (totalExpired == 1)
+        {
 
-        <script type="text/javascript">
+            <script type="text/javascript">
             toastr.options = {
                 "closeButton": true,
                 "debug": false,
@@ -157,35 +170,38 @@
             //        })
             //    }
             //}
-        </script>
+            </script>
+        }
+        else if (totalExpired > 1)
+        {
+
+            <script type="text/javascript">
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-left",
+                    "preventDuplicates": false,
+                    "showDuration": "15000",
+                    "hideDuration": "1000",
+                    "timeOut": "10000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.error("Please be informed that you have expired expenses. In order to see them search for 'expired' or look for the red colored rows.", "Expired Expenses!");
+            </script>
+        }
+
+
+
     }
-    else if (totalExpired > 1)
+    else
     {
-
-        <script type="text/javascript">
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-left",
-                "preventDuplicates": false,
-                "showDuration": "15000",
-                "hideDuration": "1000",
-                "timeOut": "10000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr.error("Please be informed that you have expired expenses. In order to see them search for 'expired' or look for the red colored rows.", "Expired Expenses!");
-        </script>
+        <p>No expense has been added</p>
     }
-
-}
-else
-{
-    <p>No expense has been added</p>
-}
+</form>
 
