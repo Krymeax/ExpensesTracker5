@@ -30,7 +30,83 @@
                     var chart = new google.visualization.PieChart(document.getElementById('chartdiv'));
                     chart.draw(data,
                         {
+                            title: "Monthly Expense Pie Chart",
+                            position: "top",
+                            fontsize: "14px",
+                        });
+                },
+                error: function () {
+                    alert("Error loading data! Please try again.");
+                }
+            });
+        })
+    }
+</script>
+
+<div id="columnChartDiv" style="width: 1000px; height: 500px; margin:0 auto"></div>
+<script>
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(DrawonLoad);
+
+    function DrawonLoad() {
+        $(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/Expense/GetMonthlyExpense',
+                success: function (chartsdata) {
+                    var Data = chartsdata.jsonList;
+
+                    let dataArr = [];
+
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Expense Name');
+                    data.addColumn('number', 'Amount');
+                    for (var i = 0; i < Data.length; i++) {
+                        data.addRow([Data[i].expenseName, Data[i].amount]);
+                    }
+
+                    var chart = new google.visualization.ColumnChart(document.getElementById('columnChartDiv'));
+                    chart.draw(data,
+                        {
                             title: "Monthly Expense Chart",
+                            position: "top",
+                            fontsize: "14px",
+                        });
+                },
+                error: function () {
+                    alert("Error loading data! Please try again.");
+                }
+            });
+        })
+    }
+</script>
+
+<div id="columnChartDivYearly" style="width: 1000px; height: 500px; margin:0 auto"></div>
+<script>
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(DrawonLoad);
+
+    function DrawonLoad() {
+        $(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/Expense/GetYearlyExpense',
+                success: function (chartsdata) {
+                    var Data = chartsdata.jsonList;
+
+                    let dataArr = [];
+
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Expense Name');
+                    data.addColumn('number', 'Amount');
+                    for (var i = 0; i < Data.length; i++) {
+                        data.addRow([Data[i].expenseName, Data[i].amount]);
+                    }
+
+                    var chart = new google.visualization.ColumnChart(document.getElementById('columnChartDivYearly'));
+                    chart.draw(data,
+                        {
+                            title: "Yearly Expense Chart",
                             position: "top",
                             fontsize: "14px",
                         });

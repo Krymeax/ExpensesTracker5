@@ -119,92 +119,22 @@ namespace ExpensesTracker5.Controllers
             return RedirectToAction("Index");
         }
 
-        //[Microsoft.AspNetCore.Mvc.HttpPost]
-        //public Microsoft.AspNetCore.Mvc.JsonResult GetMonthlyExpense() // 30 days
-        //{
-        //        Dictionary<string, decimal> dictWeeklySum = new Dictionary<string, decimal>();
-
-        //        decimal utilitiesSum = _db.Expenses.Where
-        //            (cat => cat.Category == "Utilities" && (cat.ExpenseDate > DateTime.Now.AddDays(-30)))
-        //            .Select(cat => cat.Amount)
-        //            .Sum();
-
-        //        decimal payrollsSum = _db.Expenses.Where
-        //           (cat => cat.Category == "Payrolls" && (cat.ExpenseDate > DateTime.Now.AddDays(-30)))
-        //           .Select(cat => cat.Amount)
-        //           .Sum();
-
-        //        decimal rentSum = _db.Expenses.Where
-        //           (cat => cat.Category == "Rent" && (cat.ExpenseDate > DateTime.Now.AddDays(-30)))
-        //           .Select(cat => cat.Amount)
-        //           .Sum();
-
-        //        decimal maintenanceSum = _db.Expenses.Where
-        //           (cat => cat.Category == "Maintenance" && (cat.ExpenseDate > DateTime.Now.AddDays(-30)))d
-        //           .Select(cat => cat.Amount)
-        //           .Sum();
-
-        //        decimal bankSum = _db.Expenses.Where
-        //        (cat => cat.Category == "Bank rates" && (cat.ExpenseDate > DateTime.Now.AddDays(-30)))
-        //        .Select(cat => cat.Amount)
-        //        .Sum();
-
-        //        dictWeeklySum.Add("Utilities", utilitiesSum);
-        //        dictWeeklySum.Add("Payrolls", payrollsSum);
-        //        dictWeeklySum.Add("Rent", rentSum);
-        //        dictWeeklySum.Add("Maintenance", maintenanceSum);
-        //        dictWeeklySum.Add("Bank rates", bankSum);
-
-        //    return Json(dictWeeklySum, JsonRequestBehavior.AllowGet);
-        //}
-        //[Microsoft.AspNetCore.Mvc.HttpPost]
         [System.Web.Mvc.HttpPost]
         [System.Web.Mvc.ValidateAntiForgeryToken]
         public Microsoft.AspNetCore.Mvc.JsonResult GetMonthlyExpense() // 30 days
         {
             List<ExpenseModel> list = new List<ExpenseModel>();
-            list = _db.Expenses.Select(a => new ExpenseModel { ExpenseName = a.ExpenseName, Amount = a.Amount }).ToList();
+            list = _db.Expenses.Where(a => a.ExpenseDate > DateTime.Now.AddDays(-30)).Select(a => new ExpenseModel { ExpenseName = a.ExpenseName, Amount = a.Amount }).ToList();
             //Console.WriteLine(JsonConvert.SerializeObject(list));
             return Json(new { JSONList = list });
         }
 
-
-        public Microsoft.AspNetCore.Mvc.JsonResult GetYearlyExpense() // last 12 months
+        public Microsoft.AspNetCore.Mvc.JsonResult GetYearlyExpense() // 12 months
         {
-            Dictionary<string, decimal> dictYearlySum = new Dictionary<string, decimal>();
-
-            decimal utilitiesSum = _db.Expenses.Where
-                (cat => cat.Category == "Utilities" && (cat.ExpenseDate > DateTime.Now.AddMonths(-12)))
-                .Select(cat => cat.Amount)
-                .Sum();
-
-            decimal payrollsSum = _db.Expenses.Where
-               (cat => cat.Category == "Payrolls" && (cat.ExpenseDate > DateTime.Now.AddMonths(-12)))
-               .Select(cat => cat.Amount)
-               .Sum();
-
-            decimal rentSum = _db.Expenses.Where
-               (cat => cat.Category == "Rent" && (cat.ExpenseDate > DateTime.Now.AddMonths(-12)))
-               .Select(cat => cat.Amount)
-               .Sum();
-
-            decimal maintenanceSum = _db.Expenses.Where
-               (cat => cat.Category == "Maintenance" && (cat.ExpenseDate > DateTime.Now.AddMonths(-12)))
-               .Select(cat => cat.Amount)
-               .Sum();
-
-            decimal bankSum = _db.Expenses.Where
-            (cat => cat.Category == "Bank rates" && (cat.ExpenseDate > DateTime.Now.AddMonths(-12)))
-            .Select(cat => cat.Amount)
-            .Sum();
-
-            dictYearlySum.Add("Utilities", utilitiesSum);
-            dictYearlySum.Add("Payrolls", payrollsSum);
-            dictYearlySum.Add("Rent", rentSum);
-            dictYearlySum.Add("Maintenance", maintenanceSum);
-            dictYearlySum.Add("Bank rates", bankSum);
-
-            return new Microsoft.AspNetCore.Mvc.JsonResult(dictYearlySum, JsonRequestBehavior.AllowGet);
+            List<ExpenseModel> list = new List<ExpenseModel>();
+            list = _db.Expenses.Where(a => a.ExpenseDate > DateTime.Now.AddMonths(-12)).Select(a => new ExpenseModel { ExpenseName = a.ExpenseName, Amount = a.Amount }).ToList();
+            //Console.WriteLine(JsonConvert.SerializeObject(list));
+            return Json(new { JSONList = list });
         }
 
         public IEnumerable<ExpenseModel> GetSearchResult(string searchString)
